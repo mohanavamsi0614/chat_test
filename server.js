@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
 app.get("/:room",(req,res)=>{
     res.sendFile(__dirname + '/frontend/index.html')
 })
-app.get("/data:room",async (req,res)=>{
+app.get("/data/:room",async (req,res)=>{
     const data=await messanger.findOne({roomid:req.params.room})
     res.json(data)
 })
