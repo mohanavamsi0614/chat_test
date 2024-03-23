@@ -5,7 +5,6 @@ const { Server } = require('socket.io');
 const cors = require('cors'); 
 const {messanger}=require("./db")
 const {connec}=require("./db");
-const { default: mongoose } = require('mongoose');
 const io = new Server(http, {
     cors: {
         origin: '*', 
@@ -15,7 +14,8 @@ const io = new Server(http, {
 });
 app.use(cors());
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/frontend/index.html');
+    res.send("kjwqhk")
+    // res.senLdFile(__dirname + '/frontend/index.html');
 });
 app.get("/:room",(req,res)=>{
     res.sendFile(__dirname + '/frontend/index.html')
@@ -45,7 +45,6 @@ io.on("connection", async (socket) => {
         })
         await mess.save()
         console.log("dwqbk")
-        socket.join(route);
     }
     else{
         console.log("hey i got you");
@@ -55,15 +54,13 @@ io.on("connection", async (socket) => {
         socket.join(route)
     })
     socket.on("message", async (message,route,user) => {
-        io.to(route).emit("show", message,user);
+        io.emit("show", message,user);
        await messanger.findOneAndUpdate({roomid:route},
         {$push:{messages:{user:user,message:message,time:Date.now(),message_id:user+this.time}}})
     });
 });
 
-const PORT = 3030;
+const PORT = 3033;
 http.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
 });
-
-// app.listen(3000)
