@@ -1,102 +1,126 @@
 const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
+const PORT = process.env.PORT || 5000;
 const app = express();
-const http = require('http').createServer(app);
-const { Server } = require('socket.io');
-const cors = require('cors'); 
-const {messanger}=require("./db")
-const {connec}=require("./db");
-const io = new Server(http, {
-    cors: {
-        origin: '*', 
-        methods: ['GET', 'POST',"PUT",],
-        credentials: true
-    }
-});
-app.use(cors());
-app.get('/', (req, res) => {
-    res.send("kjwqhk")
-    // res.senLdFile(__dirname + '/frontend/index.html');
-});
-app.get("/:room",(req,res)=>{
-    io.on("connection", async (socket) => {
-        await connec()
-        console.log("A user connected");
-        socket.on("route",async (route,user)=>{
-            const check= await messanger.findOne({roomid:route})
-            console.log(check)
-            if (!check){
-                console.log("creating")
-                const mess=await messanger.create({
-                roomid:route,
-                messages:[
-                    {
-                        user:user,
-                        message:user+"joined",
-                        time:Date.now(),
-                        message_id:user+this.time
-                    }
-                ]
-            })
-            await mess.save()
-            console.log("dwqbk")
-        }
-        else{
-            console.log("hey i got you");
-        }
-        });
-        socket.on("connecting room",(route)=>{
-            socket.join(req.params.room)
-        })
-        socket.on("message", async (message,user) => {
-            io.emit("show", message,user);
-           await messanger.findOneAndUpdate({roomid:req.params.room},
-            {$push:{messages:{user:user,message:message,time:Date.now(),message_id:user+this.time}}})
-        });
-    });
-    
+const jwt=require("jsonwebtoken")
+const server = http.createServer(app);
+const io = socketIo(server);
+const Joi = require("joi")
+const {user}=require("./db")
+const { messanger } = require("./db");
+const { connec } = require("./db");
+const cors = require("cors");
+const loginvalid=Joi.object({
+    email:Joi.string().email(),
+    password:Joi.string().required()
 })
-app.get("/data/:room",async (req,res)=>{
+app.use(express.json())
+app.use(cors({
+    origin: '*', 
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type'],
+  }));
+app.get("/:room",async(req,res)=>{
     const data=await messanger.findOne({roomid:req.params.room})
     res.json(data)
 })
-io.on("connection", async (socket) => {
-    await connec()
-    console.log("A user connected");
-    socket.on("route",async (route,user)=>{
-        const check= await messanger.findOne({roomid:route})
+app.post("/sign",async (req,res)=>{
+    try{
+  const check=await user.findOne({email:req.body.email})
+  if(check){
+    res.json({message:"the custmore is already in db"})
+  }
+  else{
+const token=jwt.sign(req.body,"secret")
+  const userdata = new user({
+   name:req.body.name,
+   email:req.body.email,
+   password:req.body.password,
+   token:token
+});
+if (!signvalid.validate(req.body).error){
+    await userdata.save();
+    res.status(201).send({ message: "Pushpa data saved successfully!" });
+    }
+
+else{
+    res.json({message:uservalid.validate(req.body).error.message})
+}}}
+catch{
+    res.status(400).send("something wrong")
+}
+})
+app.post("/login",async (req,res)=>{
+        const check=await user.findOne({email:req.body.email})
         console.log(check)
-        if (!check){
-            console.log("creating")
-            const mess=await messanger.create({
-            roomid:route,
-            messages:[
-                {
-                    user:user,
-                    message:user+"joined",
-                    time:Date.now(),
-                    message_id:user+this.time
-                }
-            ]
-        })
-        await mess.save()
-        console.log("dwqbk")
+        if(check){
+            if(!loginvalid.validate(req.body).error){
+            if (req.body.password==check.password){
+                res.cookie("username",req.body.email)
+                res.json({...check,message:"ok login"})
+        }
+        else{
+            res.status(200).json({message:"password is wrong"})
+        }
+       }
+        else{
+            res.status(404).json({message:uservalid.validate(req.body).error.message})
+        }
+       
     }
     else{
-        console.log("hey i got you");
+        res.json({message:"user not in database please sign"})
     }
-    });
-    socket.on("connecting room",(route)=>{
-        socket.join(route)
-    })
-    socket.on("message", async (message,route,user) => {
-        io.emit("show", message,user);
-       await messanger.findOneAndUpdate({roomid:route},
-        {$push:{messages:{user:user,message:message,time:Date.now(),message_id:user+this.time}}})
-    });
+        
+})
+io.on("connection", async (socket) => {
+    try {
+        await connec();
+        console.log("A user connected");
+
+        socket.on("route", async (route, user) => {
+            const existingRoom = await messanger.findOne({ roomid: route });
+            if (!existingRoom) {
+                const newRoom = await messanger.create({
+                    roomid: route,
+                    messages: [{
+                        user: user,
+                        message: user + " joined",
+                        time: Date.now(),
+                        message_id: generateMessageId()
+                    }]
+                });
+                await newRoom.save();
+                console.log("New room created:", route);
+            } else {
+                console.log("Room already exists:", route);
+            }
+        });
+
+        socket.on("connecting room", (route) => {
+            socket.join(route);
+            console.log("User joined room:", route);
+        });
+
+        socket.on("message", async (message, route, user) => {
+            io.to(route).emit("show", message, user);
+            await messanger.findOneAndUpdate({ roomid: route }, {
+                $push: {
+                    messages: {
+                        user: user,
+                        message: message,
+                        time: Date.now(),
+                        message_id: 9
+                    }
+                }
+            });
+        });
+    } catch (error) {
+        console.error("Socket.io error:", error);
+    }
 });
 
-const PORT = 3033;
-http.listen(PORT, () => {
+server.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
 });
-app.listen(4040)
