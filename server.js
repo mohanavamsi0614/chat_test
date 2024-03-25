@@ -18,8 +18,7 @@ const loginvalid=Joi.object({
 app.use(express.json())
 app.use(cors({
     origin: '*', 
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type'],
+    methods: ['GET', 'POST']
   }));
 app.get("/:room",async(req,res)=>{
     const data=await messanger.findOne({roomid:req.params.room})

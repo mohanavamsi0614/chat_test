@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 import { useLocation, useNavigate } from "react-router";
 
 function Home() {
-    const socket=io("https://test-0qaq.onrender.com")
+    const socket=io("https://chat-test-cpoo.onrender.com")
     const nav=useNavigate()
     const [data,setdata]=useState({})
     function roteCreator() {
