@@ -25,7 +25,7 @@ function Chat() {
     };
   }, [data.route, messages]);
 useEffect(()=>{
-  axios.get(`http://localhost:5000/${room}`).then(
+  axios.get(`https://test-0qaq.onrender.com/${room}`).then(
     (res)=>{
       const data=res.data.messages
       const hisrtort=[...messages]
@@ -53,8 +53,8 @@ useEffect(()=>{
             key={index}
             className={`message ${
               localStorage.getItem("name") === msg.user
-                ? "self-end bg-blue-500"
-                : "self-start bg-gray-800"
+                ? " w-36 bg-blue-500"
+                : " w-36 ml-96 bg-gray-800"
             } p-2 m-2 rounded-lg w-max`}
           >
             <p className="text-white font-bold">{msg.user}</p>
