@@ -1,56 +1,78 @@
-import { useState, useEffect } from "react";
+import axios from "axios";
+import { useState, useEffect, useRef } from "react";
 import { useLocation, useParams } from "react-router";
-import socket from "../main";
+import { io } from "socket.io-client";
+const socket = io("https://test-0qaq.onrender.com");
 
 function Chat() {
   const loc = useLocation();
   const { room } = useParams();
   const data = loc.state;
-  const [messages, setmessages] = useState([{ user: "mohana", message: "hihd" }]);
+  const [messages, setMessages] = useState([{ user: "mohana", message: "hihd" }]);
   const [newMessage, setNewMessage] = useState("");
+  const messagesEndRef = useRef(null);
 
-  socket.emit("connecting room", data.route);
+  useEffect(() => {
+    socket.emit("connecting room", data.route);
 
-  useEffect(()=>{
     socket.on("show", (mess, user) => {
-        console.log(mess);
-        let newmessage = [...messages];
-        newmessage.push({ user: user, message: mess });
-        console.log(newmessage);
-        setmessages(newmessage);
-      });
-  }) 
+      setMessages(prevMessages => [...prevMessages, { user, message: mess }]);
+    });
 
-  function message() {
-    console.log("hi");
+    scrollToBottom();
+    return () => {
+      socket.off("show");
+    };
+  }, [data.route, messages]);
+useEffect(()=>{
+  axios.get(`http://localhost:5000/${room}`).then(
+    (res)=>{
+      const data=res.data.messages
+      const hisrtort=[...messages]
+      data.map((i)=>{
+        hisrtort.push(i)
+      })
+      setMessages(hisrtort)
+    }
+  )
+},[])
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  function sendMessage() {
     socket.emit("message", newMessage, room, data.name);
     setNewMessage("");
   }
 
   return (
-    <div className=" h-screen bg-black p-2">
-      <div className="messages">
-        {messages.map((i, j) => (
+    <div className="h-screen bg-black p-2 flex flex-col justify-between">
+      <div className="messages overflow-y-auto">
+        {messages.map((msg, index) => (
           <div
-            key={j}
-            className={
-              localStorage.getItem("name") == i.user
-                ? "border-white border  bg-white w-36 relative  p-1 rounded-2xl"
-                : "border-white border bg-gray-500 w-36  right-1  p-1 rounded-2xl"
-            }
+            key={index}
+            className={`message ${
+              localStorage.getItem("name") === msg.user
+                ? "self-end bg-blue-500"
+                : "self-start bg-gray-800"
+            } p-2 m-2 rounded-lg w-max`}
           >
-            <h1 className="flex justify-end font-bold">{i.user}</h1>
-            <h1>{i.message}</h1>
+            <p className="text-white font-bold">{msg.user}</p>
+            <p className="text-white">{msg.message}</p>
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
-      <div className=" fixed bottom-4 flex justify-center w-full">
+      <div className="flex justify-center items-center">
         <textarea
-          className="textarea w-96"
+          className="textarea w-96 p-2 rounded-lg resize-none bg-gray-800 text-white"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
+          placeholder="Type your message here..."
         />
-        <button onClick={message}>➡️</button>
+        <button onClick={sendMessage} className="ml-2 bg-blue-500 text-white font-bold py-2 px-4 rounded">
+          Send
+        </button>
       </div>
     </div>
   );

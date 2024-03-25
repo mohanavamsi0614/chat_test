@@ -1,14 +1,14 @@
 import { useRef, useState } from "react";
-import socket from "../main";
+import { io } from "socket.io-client";
 import { useLocation, useNavigate } from "react-router";
 
 function Home() {
+    const socket=io("https://test-0qaq.onrender.com")
     const nav=useNavigate()
     const [data,setdata]=useState({})
     function roteCreator() {
         if (Object.keys(data).length==2){
         socket.emit("route",data.route,data.name)
-        // console.log(k.current.value)
         localStorage.setItem("name",data.name)
         nav(`/${data.route}`,{state:data})
         }
