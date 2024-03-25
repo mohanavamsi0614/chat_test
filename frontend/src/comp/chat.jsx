@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import { useLocation, useParams } from "react-router";
 import { io } from "socket.io-client";
-const socket = io("https://test-0qaq.onrender.com");
+const socket = io("https://chat-test-cpoo.onrender.com");
 
 function Chat() {
   const loc = useLocation();
@@ -12,20 +12,14 @@ function Chat() {
   const [newMessage, setNewMessage] = useState("");
   const messagesEndRef = useRef(null);
 
-  useEffect(() => {
     socket.emit("connecting room", data.route);
 
     socket.on("show", (mess, user) => {
+scrollToBottom();
       setMessages(prevMessages => [...prevMessages, { user, message: mess }]);
     });
-
-    scrollToBottom();
-    return () => {
-      socket.off("show");
-    };
-  }, [data.route, messages]);
 useEffect(()=>{
-  axios.get(`https://test-0qaq.onrender.com/${room}`).then(
+  axios.get(`https://chat-test-cpoo.onrender.com/${room}`).then(
     (res)=>{
       const data=res.data.messages
       const hisrtort=[...messages]
