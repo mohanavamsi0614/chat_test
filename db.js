@@ -15,6 +15,13 @@ const schema=mongoose.Schema({
         }
     ]
 })
+const mongoose=require("mongoose")
+const user=mongoose.Schema({
+    name:String,
+    password:String,
+    email:String,
+    token:String
+})
+const usercoll=mongoose.model("user",user)
 const messanger=mongoose.model("messanger",schema)
-// connect()
-module.exports={connec:connect,messanger:messanger}
+module.exports={connec:connect,messanger:messanger,user:usercoll}
