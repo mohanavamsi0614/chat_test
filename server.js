@@ -20,6 +20,8 @@ app.use(cors({
     origin: '*', 
     methods: ['GET', 'POST']
   }));
+connec().then(()=>{console.log("A user connected");})
+  
 app.get("/:room",async(req,res)=>{
     const data=await messanger.findOne({roomid:req.params.room})
     res.json(data)
@@ -47,6 +49,7 @@ else{
     res.json({message:uservalid.validate(req.body).error.message})
 }}}
 catch(er){
+    console.log(er)
     res.status(400).send(er)
 }
 })
@@ -75,8 +78,7 @@ app.post("/login",async (req,res)=>{
 })
 io.on("connection", async (socket) => {
     try {
-        await connec();
-        console.log("A user connected");
+    
 
         socket.on("route", async (route, user) => {
             const existingRoom = await messanger.findOne({ roomid: route });
