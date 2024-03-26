@@ -14,20 +14,18 @@ function Nav() {
         
     }
     return (
-        <div className=" flex justify-evenly w-full relative h-16 items-center text-xl bg-black border-b-4 border-white text-white">
+        <div className=" flex justify-evenly w-96 h-16 items-center absolute  text-xl bg-white bg-opacity-10 border-4 border-white text-white rounded-3xl p-4">
         {/* <img/> */}
         <div><Link to="/">Home</Link></div>
         <div><Link to="/">About</Link></div>
-        <div><Link to={"/filter"}>Filter</Link></div>
 
-        <div className={!getCookie("username")&& " hidden"}><Link to="/add">Add</Link></div>
-        <div className={getCookie("token") ? " hidden" : "absolute right-16 w-24 flex"}>
+        <div className={getCookie("token") ? " hidden" : "w-24 flex"}>
 
             <div>
-            <Link to={"/sign"}><button className=" border-white border-2 p-1 m-1">Sign</button></Link>
+            <Link to={"/sign"}><button className=" p-2 m-1 hover:bg-green-600 hover:bg-opacity-5">Sign</button></Link>
             </div>
             <div>
-            <Link to={"/login"}><button className="p-1 bg-gray-500 m-1">Login</button></Link>
+            <Link to={"/login"}><button className=" border-l-2 border-white m-1 hover:bg-green-600 hover:bg-opacity-5 p-2 ">Login</button></Link>
             </div>
         </div>
         <div className={!getCookie("token") && "hidden"}>

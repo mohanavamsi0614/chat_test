@@ -68,8 +68,11 @@ app.post("/login",async (req,res)=>{
     }
     else{
         res.json({message:"user not in database please sign"})
-    }
-        
+    }      
+})
+app.get("/users",async (req,res)=>{
+    const data=await user.find({})
+    res.status(200).json(data)
 })
 io.on("connection", async (socket) => {
     try {
