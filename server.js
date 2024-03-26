@@ -20,7 +20,7 @@ app.use(cors({
     origin: '*', 
     methods: ['GET', 'POST']
   }));
-connec().then(()=>{console.log("A user connected");})
+connec().then(()=>{console.log(" connected");})
   
 app.get("/:room",async(req,res)=>{
     const data=await messanger.findOne({roomid:req.params.room})
@@ -40,14 +40,9 @@ const token=jwt.sign(req.body,"secret")
    password:req.body.password,
    token:token
 });
-if (!signvalid.validate(req.body).error){
     await userdata.save();
     res.status(201).send({ message: "Pushpa data saved successfully!" });
-    }
-
-else{
-    res.json({message:uservalid.validate(req.body).error.message})
-}}}
+ }}
 catch(er){
     console.log(er)
     res.status(400).send(er)

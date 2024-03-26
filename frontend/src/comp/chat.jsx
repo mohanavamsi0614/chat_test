@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation, useParams } from "react-router";
 import { io } from "socket.io-client";
 
@@ -10,7 +10,7 @@ function Chat() {
   const data = loc.state;
   const [messages, setmessages] = useState([{ user: "mohana", message: "hihd" }]);
   const [newMessage, setNewMessage] = useState("");
-
+  const chatContainerRef=useRef()
   useEffect(() => {
     socket.emit("connecting room", data.route);
   }, [data.route]);
@@ -23,7 +23,12 @@ function Chat() {
       setmessages(newmessage);
     });
 
-   
+   useEffect(()=>{
+    scrollToBottom()
+   },[messages])
+    const scrollToBottom = () => {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    };
 
   function message() {
     console.log("hi");
@@ -33,7 +38,7 @@ function Chat() {
 
   return (
     <div className=" h-screen bg-black p-2 flex flex-col">
-      <div className="messages ">
+      <div className="messages overflow-scroll h-96" ref={chatContainerRef}>
         {messages.map((i, j) => (
           <div
             key={j}
