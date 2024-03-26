@@ -46,8 +46,8 @@ if (!signvalid.validate(req.body).error){
 else{
     res.json({message:uservalid.validate(req.body).error.message})
 }}}
-catch{
-    res.status(400).send("something wrong")
+catch(er){
+    res.status(400).send(er)
 }
 })
 app.post("/login",async (req,res)=>{
