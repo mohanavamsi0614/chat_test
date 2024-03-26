@@ -2,8 +2,8 @@ import { Route, Routes } from 'react-router'
 import './App.css'
 import Home from './comp/homme'
 import Chat from './comp/chat'
-import Login from './login'
-import Sigin from './sign'
+import Login from './comp/login'
+import Sigin from './comp/sign'
 // import test from ''
 function App() {
   return (

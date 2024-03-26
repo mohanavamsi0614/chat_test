@@ -1,6 +1,7 @@
-import { useRef, useState } from "react";
+import {  useState } from "react";
 import { io } from "socket.io-client";
-import { useLocation, useNavigate } from "react-router";
+import {  useNavigate } from "react-router";
+import Nav from "./nav";
 
 function Home() {
     const socket=io("https://chat-test-cpoo.onrender.com")
@@ -23,6 +24,8 @@ function Home() {
         setdata(u)
     }
     return(
+        <>
+        <Nav/>
         <div className=" bg-black w-screen h-screen flex justify-center items-center flex-col">
             <h1 className=" text-white text-5xl  m-3">Chato</h1>
             <p className=" text-white text-xl">Where Privasy materr!!</p>
@@ -32,6 +35,11 @@ function Home() {
             </form>
             <button onClick={roteCreator} className=" w-32 h-12 text-white border border-white hover:bg-white hover:text-black">G0</button>
         </div>
+        <div>
+            <h1> users</h1>
+            {}
+        </div>
+        </>
     )
 }
 export default Home;

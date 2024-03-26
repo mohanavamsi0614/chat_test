@@ -15,7 +15,7 @@ function Sigin() {
         console.log(data)
         console.log((Object.keys(data)))
         if (Object.keys(data).length==3){
-        axios.post("https://test-0qaq.onrender.com/sign",data).then(
+        axios.post("https://chat-test-cpoo.onrender.com/sign",data).then(
             (res)=>{
                 const response=res
                 console.log(response)
