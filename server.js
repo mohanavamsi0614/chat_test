@@ -5,11 +5,10 @@ const PORT = process.env.PORT || 5500;
 const app = express();
 const jwt=require("jsonwebtoken")
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = socketIo(server,{cors:{origin:"*"}});
 const Joi = require("joi")
 const {user}=require("./db")
 const { messanger } = require("./db");
-const { connec } = require("./db");
 const cors = require("cors");
 const loginvalid=Joi.object({
     email:Joi.string().email(),
@@ -17,7 +16,7 @@ const loginvalid=Joi.object({
 })
 app.use(express.json())
 app.use(cors({
-    origin: 'https://chayo-01.netlify.app/:room', 
+    origin: '*', 
     methods: ['GET', 'POST']
   }));
 connec().then(()=>{console.log(" connected");})
