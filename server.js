@@ -17,7 +17,7 @@ const loginvalid=Joi.object({
 })
 app.use(express.json())
 app.use(cors({
-    origin: 'https://chayo-01.netlify.app', 
+    origin: 'https://chayo-01.netlify.app/:room', 
     methods: ['GET', 'POST']
   }));
 connec().then(()=>{console.log(" connected");})
