@@ -40,7 +40,7 @@ function Chat() {
         setmessages(newdata)
       }
     )
-   },[])
+   },[data.route])
     const scrollToBottom = () => {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     };
