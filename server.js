@@ -21,11 +21,7 @@ app.use(cors({
     methods: ['GET', 'POST']
   }));
 connec().then(()=>{console.log(" connected");})
-const corsOptions = {
-    origin: 'https://chayo-01.netlify.app',
-    credentials: true 
-};
-io.origins(corsOptions)
+  
 app.get("/:room",async(req,res)=>{
     const data=await messanger.findOne({roomid:req.params.room})
     res.json(data)
