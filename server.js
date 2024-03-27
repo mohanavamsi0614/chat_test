@@ -19,7 +19,7 @@ app.use(express.json())
 app.use(cors({
     origin: 'https://chayo-01.netlify.app/', 
     methods: ['GET', 'POST'],
-    a
+
   }));
 connec().then(()=>{console.log(" connected");})
   
