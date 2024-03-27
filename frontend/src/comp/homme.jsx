@@ -14,7 +14,7 @@ function Home() {
     const nav=useNavigate()
     const [data,setdata]=useState({})
     function roteCreator() {
-        if (Object.keys(data).length==1){
+        if (Object.keys(data).length==2){
         socket.emit("route",data.route,data.name)
         localStorage.setItem("name",data.name)
         nav(`/${data.route}`,{state:data})
@@ -43,6 +43,7 @@ function Home() {
             <h1 className=" text-white text-5xl  m-3">Chato</h1>
             <p className=" text-white text-xl">Where Privasy materr!!</p>
             <form  className=" flex-col flex justify-between">
+            <input placeholder="name"  className="m-3  p-2 h-10 rounded-xl" name="name" onChange={(e)=>{handle(e.target)}}/>
             <input placeholder="room id"  className="m-3  p-2 h-10 rounded-xl" name="route" onChange={(e)=>{handle(e.target)}}/>
             </form>
             {/* Anna we need to diffren ative do this with socket id ok bye!!! */}

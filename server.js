@@ -86,8 +86,7 @@ io.on("connection", async (socket) => {
                     messages: [{
                         user: user,
                         message: user + " joined",
-                        time: Date.now(),
-                        message_id: generateMessageId()
+                        time: Date.now()
                     }]
                 });
                 await newRoom.save();

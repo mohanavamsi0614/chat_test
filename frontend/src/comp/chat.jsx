@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
-import {  useParams } from "react-router";
+import {  useLocation, useParams } from "react-router";
 import { io } from "socket.io-client";
 import Nav from "./nav";
 
@@ -11,11 +11,12 @@ function getCookie(name) {
   return cookie ? cookie.split('=')[1] :""
 }
 function Chat() {
-  const { room } = useParams();
+  const loc=useLocation()
+  const data=loc.state
   const [messages, setmessages] = useState([{ user: "mohana", message: "hihd" }]);
   const [newMessage, setNewMessage] = useState("");
   const chatContainerRef=useRef()
-    socket.emit("connecting room",room);
+    socket.emit("connecting room",data.route);
 
     socket.on("show", (mess, user) => {
       console.log(mess);
@@ -29,7 +30,7 @@ function Chat() {
     scrollToBottom()
    },[messages])
    useEffect(()=>{
-    axios.get(`https://chat-test-cpoo.onrender.com/${room}`).then(
+    axios.get(`https://chat-test-cpoo.onrender.com/${data.route}`).then(
       (res)=>{
         const response=res.data.messages
         const newdata=[...messages]
@@ -46,7 +47,7 @@ function Chat() {
 
   function message() {
     console.log("hi");
-    socket.emit("message", newMessage, room,getCookie("username"));
+    socket.emit("message", newMessage, data.route,getCookie("username"));
     setNewMessage("");
   }
 
