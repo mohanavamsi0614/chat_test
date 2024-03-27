@@ -7,6 +7,7 @@ const jwt=require("jsonwebtoken")
 const server = http.createServer(app);
 const io = socketIo(server,{cors:{origin:"*"}});
 const Joi = require("joi")
+const {connec}=require("./db")
 const {user}=require("./db")
 const { messanger } = require("./db");
 const cors = require("cors");
