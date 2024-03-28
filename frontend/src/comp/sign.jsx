@@ -26,6 +26,9 @@ function Sigin() {
                     case "the custmore is already in db":
                         seterror({...error,login:"you are already in having an account please login"})
                         break
+                    case "so sorry usernametake":
+                        seterror({...error,login:"so sorry UserName taken"})
+                        break
                     case '"password" is not allowed to be empty':
                         seterror({...error,password:"give the password"})
                         break

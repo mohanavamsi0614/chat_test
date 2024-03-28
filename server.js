@@ -26,11 +26,37 @@ app.get("/:room",async(req,res)=>{
     const data=await messanger.findOne({roomid:req.params.room})
     res.json(data)
 })
+app.put("/id/:id",async(req,res)=>{
+    const data=await messanger.findOne({roomid:req.body.roomid})
+    const bata=data.messages.map((i)=>{
+        if (i._id==req.params.id){
+            i.message=req.body.message
+    }
+    return i
+})
+data.messages=bata
+await messanger.findOneAndUpdate({roomid:req.body.roomid},data)
+    res.json(data)
+})
+app.delete("/id/:id",async(req,res)=>{
+    const data=await messanger.findOne({roomid:req.body.roomid})
+    // res.json(data)
+    const bata=data.messages.filter((i)=>{return i._id != req.params.id})
+    data.messages=bata
+
+await messanger.findOneAndUpdate({roomid:req.body.roomid},data)
+    res.json(data)
+})
+
 app.post("/sign",async (req,res)=>{
     try{
   const check=await user.findOne({email:req.body.email})
+  const check1=await user.findOne({name:req.body.name})
   if(check){
     res.json({message:"the custmore is already in db"})
+  }
+  else if (check1){
+    res.json({message:"so sorry usernametaken"})
   }
   else{
 const token=jwt.sign(req.body,"secret")

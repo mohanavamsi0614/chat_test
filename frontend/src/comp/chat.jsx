@@ -29,10 +29,7 @@ function Chat() {
    useEffect(()=>{
     scrollToBottom()
    },[messages])
-   useEffect(()=>{
-    axios.get(`https://chat-test-cpoo.onrender.com/${data.route}`,{
-      withCredentials: true
-    }).then(
+    axios.get(`https://chat-test-cpoo.onrender.com/${data.route}`).then(
       (res)=>{
         const response=res.data.messages
         const newdata=[...messages]
@@ -42,7 +39,6 @@ function Chat() {
         setmessages(newdata)
       }
     )
-   },[data.route])
     const scrollToBottom = () => {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     };
