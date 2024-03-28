@@ -48,6 +48,7 @@ function Chat() {
       console.log(message_id)
       axios.put(`https://chat-test-cpoo.onrender.com/id/${message_id}`,{roomid:data.route,message:r}).then(
         (res)=>{
+          location.reload()
           return res
         }
         )
@@ -58,6 +59,14 @@ function Chat() {
     console.log("hi");
     socket.emit("message", newMessage, data.route,getCookie("username"));
     setNewMessage("");
+  }
+  function delet(message_id) {
+    axios.delete(`https://chat-test-cpoo.onrender.com/id/${message_id}`).then(
+      (res)=>{
+        location.reload()
+        return res
+      }
+    ) 
   }
 
   return (
@@ -79,7 +88,7 @@ function Chat() {
         <div className=" font-bold text-white ">...</div>
         <div className=" absolute z-10 size-10 flex flex-col">
         <div onClick={()=>{update(i._id)}}>Update</div>
-        <div>delete</div>
+        <div onClick={()=>{delet(i._id)}}>delete</div>
         </div>
       </div>
     ))}
