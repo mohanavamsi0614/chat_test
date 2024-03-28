@@ -29,6 +29,7 @@ function Chat() {
    useEffect(()=>{
     scrollToBottom()
    },[messages])
+   useEffect(()=>{
     axios.get(`https://chat-test-cpoo.onrender.com/${data.route}`).then(
       (res)=>{
         const response=res.data.messages
@@ -38,11 +39,21 @@ function Chat() {
         })
         setmessages(newdata)
       }
-    )
+    )},[])
     const scrollToBottom = () => {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     };
+    function update(message_id) {
+      let r=prompt("enter your updated message")
+      console.log(message_id)
+      axios.put(`https://chat-test-cpoo.onrender.com/id/${message_id}`,{roomid:data.route,message:r}).then(
+        (res)=>{
+          return res
+        }
+        )
 
+      
+    }
   function message() {
     console.log("hi");
     socket.emit("message", newMessage, data.route,getCookie("username"));
@@ -65,6 +76,11 @@ function Chat() {
       >
         <h1 className="font-semibold">{i.user}</h1>
         <p>{i.message}</p>
+        <div className=" font-bold text-white ">...</div>
+        <div className=" absolute z-10 size-10 flex flex-col">
+        <div onClick={()=>{update(i._id)}}>Update</div>
+        <div>delete</div>
+        </div>
       </div>
     ))}
   </div>
