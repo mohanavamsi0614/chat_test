@@ -26,7 +26,7 @@ function Sigin() {
                     case "the custmore is already in db":
                         seterror({...error,login:"you are already in having an account please login"})
                         break
-                    case "so sorry usernametake":
+                    case "so sorry usernametaken":
                         seterror({...error,login:"so sorry UserName taken"})
                         break
                     case '"password" is not allowed to be empty':
@@ -47,7 +47,7 @@ function Sigin() {
     }
     return(
         <div className="h-screen bg-black flex justify-center items-center flex-col">
-     {error.login && (<div className=" w-70 bg-red-400 text-white rounded-xl p-4">{error.login}</div>)}
+     {error.login && (<div className=" w-70 bg-red-400 m-2 text-white rounded-xl p-4">{error.login}</div>)}
 
         <div className="w-80 rounded-2xl bg-slate-900">
      <div className="flex flex-col gap-2 p-8">
